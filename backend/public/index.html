@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kamera Görüntüsü</title>
+    <style>
+        #cameraImage {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Raspberry Pi Kamera Görüntüsü</h1>
+    <img id="cameraImage" alt="Kamera Görüntüsü" />
+
+    <script>
+        const ws = new WebSocket(`ws://${window.location.hostname}:${window.location.port}`);
+        const img = document.getElementById('cameraImage');
+
+        ws.onmessage = function(event) {
+            // Base64 görüntüyü al ve img elementinde göster
+            img.src = 'data:image/jpeg;base64,' + event.data;
+        };
+
+        ws.onopen = function() {
+            console.log('WebSocket bağlantısı açıldı');
+        };
+
+        ws.onclose = function() {
+            console.log('WebSocket bağlantısı kapandı');
+        };
+
+        ws.onerror = function(error) {
+            console.error('WebSocket hatası:', error);
+        };
+    </script>
+</body>
+</html> 
